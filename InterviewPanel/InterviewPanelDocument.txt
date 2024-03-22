@@ -1,0 +1,24 @@
+Interview Panel Application
+---------------------------
+	-> User Setup
+		-> HR , Candidate (b1)
+		
+	-> HR
+		-> Add (b1)
+		-> Update and Remove (b2)
+		
+	-> candidate
+		-> Add (b1)
+		-> Update and Remove (b2)
+		
+	-> Interview Process
+		-> Start Interview (b1)
+		-> Current Interview Status (b1)
+		-> Update Interview Status (b1)
+		
+	-> Reports
+		-> Show HR List (b2)
+		-> Show Candidate List (b2)
+		-> Search HR (b1)
+		-> Search Candidate (b1)
+			
