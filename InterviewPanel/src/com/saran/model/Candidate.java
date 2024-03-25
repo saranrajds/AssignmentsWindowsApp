@@ -10,7 +10,11 @@ public class Candidate {
 	private int CandidateId;
 	private int CandidateSerialNo;
 	private int hrId;
-	
+
+	public Candidate() {
+
+	}
+
 	public int getCandidateId() {
 		return CandidateId;
 	}

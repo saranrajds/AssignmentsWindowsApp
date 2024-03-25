@@ -2,9 +2,7 @@ package com.saran.enums;
 
 public enum ParticipantRole {
 
-	HR(1), 
-	RECEPTION_STAFF(2),
-	CANDIDATE(3);
+	HR(1), RECEPTION_STAFF(2), CANDIDATE(3);
 
 	int userRoleNumber;
 
@@ -16,4 +14,3 @@ public enum ParticipantRole {
 		return userRoleNumber;
 	}
 }
-

@@ -1,6 +1,8 @@
 package com.saran.loginmanagement;
 
-import com.saran.loginmanagement.*;
+import com.saran.enums.UserType;
+import com.saran.interivewdb.InterviewDB;
+import com.saran.model.Credentials;
 
 public class LoginModel {
 
@@ -10,25 +12,30 @@ public class LoginModel {
 		this.loginView = loginView;
 	}
 
-	public void isValidate(String userName, String password) {
+	public void isValidate(Credentials credential) {
 
-		if (isValidUserName(userName)) {
-			if (!isValidPassword(password)) {
-				loginView.alertMessage("password is Wrong");
-			} else {
-
-				loginView.onSuccessAlert("Login Sucess");
-			}
-		} else {
-			loginView.alertMessage("UserName Wrong");
+		int loginStatus = InterviewDB.getInstance().isValidCredential(credential);
+		showLoginStatus(loginStatus);
+	}
+	
+	public void showLoginStatus(int loginStatus) {
+		
+		if(loginStatus == UserType.ADMIN.getUserType()){
+			loginView.onSuccessAlert("Login Sucess");	
 		}
-	}
+		else if(loginStatus == UserType.USER.getUserType()) {
+			loginView.onSuccessAlert("Login Sucess");
+		}
+		else {
+			loginView.alertMessage("UserName or password Wrong");
+		}
+	} 
+	
+//	private boolean isValidUserName(String userName) {
+//		return userName.equals("1");
+//	}
 
-	private boolean isValidUserName(String userName) {
-		return userName.equals("123");
-	}
-
-	private boolean isValidPassword(String password) {
-		return password.equals("123");
-	}
+//	private boolean isValidPassword(String password) {
+//		return password.equals("1");
+//	}
 }

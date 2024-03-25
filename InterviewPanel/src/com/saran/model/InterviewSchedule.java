@@ -12,7 +12,7 @@ public class InterviewSchedule {
 	private String onDate;
 	private List<Candidate> candidates;
 	private int status;
-	
+
 	public int getStatus() {
 		return status;
 	}

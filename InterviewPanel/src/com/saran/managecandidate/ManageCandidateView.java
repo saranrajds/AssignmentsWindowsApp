@@ -3,7 +3,6 @@ package com.saran.managecandidate;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
-
 import com.saran.commonvalidation.CommonValidations;
 import com.saran.model.Candidate;
 import com.saran.reportmanagement.ReportView;
@@ -17,7 +16,9 @@ public class ManageCandidateView {
 	}
 
 	public void init() {
-
+		
+		
+		manageCandidateMadel.retriveCandidate();
 		Scanner scanner = new Scanner(System.in);
 		System.out.print(
 				"1 -> Add Candidate \n2 -> Update Candidate \n3 -> Remove Candidate \n9 -> Exit \nEnter Your Choich :");
@@ -67,8 +68,7 @@ public class ManageCandidateView {
 	private void removeCandidate() {
 
 		String candidateEmail = getCandidateEmail();
-		if (!CommonValidations.isValidEmail(candidateEmail) || candidateEmail.isEmpty() || candidateEmail.isBlank())
-		{
+		if (!CommonValidations.isValidEmail(candidateEmail) || candidateEmail.isEmpty() || candidateEmail.isBlank()) {
 			checkForAddNewCandidate();
 			return;
 		}
@@ -96,7 +96,7 @@ public class ManageCandidateView {
 		return candidateEmail;
 	}
 
-	private void addCandidate(boolean isFromAddCandidate) {
+	private void addCandidate(boolean isFromAddCandidate){
 
 		Scanner scanner = new Scanner(System.in);
 		Candidate candidate = new Candidate();

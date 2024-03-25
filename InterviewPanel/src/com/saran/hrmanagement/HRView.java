@@ -3,8 +3,6 @@ package com.saran.hrmanagement;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
-
-import com.saran.model.Candidate;
 import com.saran.model.HR;
 import com.saran.reportmanagement.ReportView;
 
@@ -18,6 +16,8 @@ public class HRView {
 
 	public void init() {
 
+
+		hrModel.retriveHR();
 		Scanner scanner = new Scanner(System.in);
 
 		showAlert("HR Management");
@@ -87,24 +87,22 @@ public class HRView {
 		int hrId = -1;
 		String hrEmail = isFromAddHR ? "" : getHREMail();
 
-		if (!isFromAddHR && (hrEmail.length() == 0 || hrEmail.isEmpty() || hrEmail.isBlank()))
-		{
+		if (!isFromAddHR && (hrEmail.length() == 0 || hrEmail.isEmpty() || hrEmail.isBlank())) {
 			checkForAddNewHR();
 			return;
 		}
 
 		System.out.print("Enter HR Name : ");
 		hr.setName(scanner.nextLine());
-		
-		if(isFromAddHR) {
+
+		if (isFromAddHR) {
 			System.out.print("Enter HR EMail : ");
 			hr.setEmail(scanner.next());
-		}
-		else {
-			System.out.println("Enter HR EMail : "+hrEmail);
+		} else {
+			System.out.println("Enter HR EMail : " + hrEmail);
 			hr.setEmail(hrEmail);
 		}
-		
+
 		hr.setId(hrId);
 		hrModel.addNewHR(hr, isFromAddHR);
 	}

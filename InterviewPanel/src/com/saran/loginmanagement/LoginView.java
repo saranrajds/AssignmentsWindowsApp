@@ -4,6 +4,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import com.saran.hrmanagement.HRView;
 import com.saran.interviewmanagement.InterviewView;
+import com.saran.model.Credentials;
 import com.saran.managecandidate.ManageCandidateView;
 import com.saran.reportmanagement.ReportView;
 
@@ -16,13 +17,13 @@ public class LoginView {
 	}
 
 	public void init() {
-
 		Scanner scanner = new Scanner(System.in);
+		Credentials credential = new Credentials();
 		System.out.print("Enter UserName : ");
-		String userName = scanner.next();
+		credential.setUserName(scanner.next());
 		System.out.print("Enter Password : ");
-		String password = scanner.next();
-		loginModel.isValidate(userName, password);
+		credential.setPassword(scanner.next());
+		loginModel.isValidate(credential);
 	}
 
 	public void alertMessage(String message) {
@@ -68,6 +69,7 @@ public class LoginView {
 					new ReportView().initReport();
 					break;
 				case 9:
+//					loginModel.uploadData();
 					System.out.println("Thank You");
 					isShowMenu = false;
 					break;

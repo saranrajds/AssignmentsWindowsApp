@@ -2,7 +2,6 @@ package com.saran.interviewmanagement;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
-
 import com.saran.enums.InterviewProgressStatus;
 import com.saran.model.Candidate;
 
