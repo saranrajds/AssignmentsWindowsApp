@@ -1,6 +1,6 @@
 package com.saran.librarymanagement.model;
 
-public class Admin {
+public class Admin1 {
 
 	private String name;
 	private String userId;

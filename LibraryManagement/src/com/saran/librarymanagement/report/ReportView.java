@@ -3,6 +3,7 @@ package com.saran.librarymanagement.report;
 import java.util.List;
 import java.util.Scanner;
 
+import com.saran.librarymanagement.enums.UserType;
 import com.saran.librarymanagement.model.Book;
 import com.saran.librarymanagement.model.User;
 
@@ -17,31 +18,39 @@ public class ReportView {
 	public void reportInit() {
 		
 		Scanner scanner = new Scanner(System.in);
-		System.out.println("Reports");
 		
+		System.out.println("\n------------Reports----------");		
 		System.out.println("1 -> Get Books List");
 		System.out.println("2 -> Get Users List");
 		System.out.println("9 -> Back");
-		
+		System.out.print("\nEnter Your Choice : ");
 		String choice = scanner.next();
 		
 		switch (choice) {
 		case "1":
 			getBooksList();
+			reportInit();
 			break;
 		case "2":
 			getUserList();
+			reportInit();
 			break;
 		case "9":
 			return;
 		default:
 			System.out.println("Enter correct choice...");
+			reportInit();
 			break;
 		}
 	}
 
 	private void getUserList() {
-		reportModel.getUserList();	
+		reportModel.getUserList();
+//		checkForReport();
+	}
+	
+	public void getParticularUserList(int userType) {
+		reportModel.getParticularUserList(userType);	
 	}
 
 	private void getBooksList() {
@@ -50,23 +59,40 @@ public class ReportView {
 
 	public void showBooksList(List<Book> books) {
 
+		System.out.println("\n------------------- Books ----------------------\n");
+		System.out.println("Id \tName \t\tBook Author \tBook Status  \tCreated Date ");
+		System.out.println("-----------------------------------------------------");
 		for(Book book: books) {
-			System.out.printf("Book Id : %d, Book Name : %s, Book Author : %s, Book Status : %s \n", 
-					book.getId(), book.getName(), book.getAuthor(), book.getAvailability());
+			System.out.println(book.getId() +"\t"+ book.getName() +"\t"+ book.getAuthor() +"\t"+ book.getAvailability()+"\t"+book.getModifyDate());
 		}
-		checkForReport();
+		System.out.println("-----------------------------------------------------");
 	}
 	
 	public void showUserList(List<User> users) {
 		
+		System.out.println("\n------------------- Users ----------------------\n");
+		System.out.println("Id\tName \tEmail \t\tStatus \tCreated Date ");
+		System.out.println("-----------------------------------------------------");
 		for(User user: users) {
-			System.out.printf("User Id : %d, User Name : %s, User Email : %s \n", 
-					user.getId(), user.getName(), user.getEmailId());
+			System.out.println(user.getId() +"\t"+ user.getName() +"\t"+ user.getEmailId() +"\t"+ user.isActive()+"\t"+user.getModifyDate());
 		}
-		checkForReport();
+		System.out.println("-----------------------------------------------------");
+//		checkForReport();
+	}
+	
+	public void getParticularUserList(List<User> users, int userType) {
+		
+		System.out.println("\n------------------- Librarients ----------------------\n");
+		System.out.println("Id\tName \tEmail \t\tStatus \tCreated Date ");
+		System.out.println("-----------------------------------------------------");
+		for(User user: users) {
+			System.out.println(user.getId() +"\t"+ user.getName() +"\t"+ user.getEmailId() +"\t"+ user.isActive()+"\t"+user.getModifyDate());
+		}
+		System.out.println("-----------------------------------------------------");
 	}
 	
 	public void showAlert(String message) {
+		System.out.println("\n-----------------------");
 		System.out.println(message);
 	}
 	
@@ -78,7 +104,8 @@ public class ReportView {
 		if (choice.equalsIgnoreCase("yes")) {
 			reportInit();
 		} else if (choice.equalsIgnoreCase("no")) {
-			System.out.println("\n Thanks for");
+			return;
+//			System.out.println("\n Thanks for");
 		} else {
 			System.out.println("\nInvalid choice, Please enter valid choice.\n");
 			checkForReport();

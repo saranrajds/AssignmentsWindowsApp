@@ -2,6 +2,7 @@ package com.saran.librarymanagement.report;
 
 import java.util.List;
 
+import com.saran.librarymanagement.enums.UserType;
 import com.saran.librarymanagement.librarydatatabase.LibraryDatabase;
 import com.saran.librarymanagement.model.Book;
 import com.saran.librarymanagement.model.User;
@@ -31,6 +32,17 @@ public class ReportModel {
 		
 		if (users.size() > 0) {
 			reportView.showUserList(users);
+		} else {
+			reportView.showAlert("No Data Found");
+		}
+	}
+
+	public void getParticularUserList(int userType) {
+		
+		List<User> users = LibraryDatabase.getInstance().getParticularUserList(userType);
+		
+		if (users.size() > 0) {
+			reportView.getParticularUserList(users, userType);
 		} else {
 			reportView.showAlert("No Data Found");
 		}

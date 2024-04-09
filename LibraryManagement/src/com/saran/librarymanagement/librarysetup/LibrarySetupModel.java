@@ -2,6 +2,7 @@ package com.saran.librarymanagement.librarysetup;
 
 import java.util.ArrayList;
 import com.saran.librarymanagement.commonvalidation.CommonValidations;
+import com.saran.librarymanagement.enums.ModuleType;
 import com.saran.librarymanagement.librarydatatabase.LibraryDatabase;
 import com.saran.librarymanagement.model.Library;
 
@@ -13,7 +14,7 @@ class LibrarySetupModel {
 	public LibrarySetupModel(LibrarySetupView librarySetupView) {
 		
 		this.librarySetupView = librarySetupView;
-		library = LibraryDatabase.getInstance().getLibrary();
+//		library = LibraryDatabase.getInstance().getLibrary();
 	}
 
 	public void createLibrary(Library libraryInfo) {
@@ -28,17 +29,30 @@ class LibrarySetupModel {
 			return;
 		}
 		
-		ArrayList<Library> library = LibraryDatabase.getInstance().inserLibrary(libraryInfo);
-		librarySetupView.onSetupCompleted(library);
+		LibraryDatabase.getInstance().inserLibrary(libraryInfo);
+		librarySetupView.onSetupCompleted();
 	}
 
 	public void startUp() {
-		
+				
 		if(library.size() == 0|| library.get(0).getId() == 0) {
 			librarySetupView.initialSetup();
 		}
 		else {
-			librarySetupView.onSetupCompleted(library);
+			librarySetupView.onSetupCompleted();
 		}	
+	}
+
+	public ArrayList<Library> getLibraryInfo() {		
+		library = LibraryDatabase.getInstance().getLibraryInfo();
+		return library;
+	}
+	
+	public int getUserType() {
+		return LibraryDatabase.getInstance().getCurrentUserType();
+	}
+
+	public void retriveLibraryData() {
+		LibraryDatabase.getInstance().retriveDataFromFile(ModuleType.LIBRARIY.getModuleType());
 	}
 }

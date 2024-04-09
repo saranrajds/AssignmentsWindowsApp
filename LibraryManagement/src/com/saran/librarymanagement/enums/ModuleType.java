@@ -6,6 +6,7 @@ public enum ModuleType {
 	USER(2),
 	BOOK(3),
 	CREDENTIALS(4),
+	LIBRARIY(5),
 	BORROWEDBOOK(5);
 	
 	int moduleType;

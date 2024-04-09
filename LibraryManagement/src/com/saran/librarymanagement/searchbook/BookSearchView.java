@@ -31,24 +31,33 @@ public class BookSearchView {
 
 	public void showSearchBooks(List<Book> bookList) {
 
+		System.out.println("\n--------------Books-------------------");
+		System.out.printf("Id \tName \t\tBook Author \tVolume");				
+				
 		for (Book book : bookList) {
-			System.out.printf("Book Id : %d, Book Name : %s, Book Author : %s \n", book.getId(), book.getName(),
-					book.getAuthor());
+			System.out.println(book.getId()+"\t"+ book.getName() +"\t\t"+ book.getAuthor()+"\t"+book.getVolume());
 		}
+		System.out.println("-------------------------------------------\n");
 	}
 
 	public void showSearchUser(List<User> userList) {
 
+		System.out.println("\n--------------Users-------------------");			
+		System.out.printf("Id \tName \t\tEmail \tCreated Date ");		
+		
 		for (User user : userList) {
-			System.out.printf("User Id : %d, User Name : %s, User Email : %s \n", user.getId(), user.getName(),
-					user.getEmailId());
+			System.out.println(user.getId() +"\t"+ user.getName() +"\t"+ user.getEmailId() +"\t"+user.getCreatedDate());
 		}
+		System.out.println("-------------------------------------------\n");
 	}
 
 	public void bookSearchInit() {
 
 		System.out.println(
-				"-------Search Book Using------- \n1 -> Book Name \n2 -> Book Author \n Enter your choice (100 or 200) : ");
+						"-------Search Book Using------- "
+						+ "\n1 -> Book Name "
+						+ "\n2 -> Book Author ");
+		System.out.print("\n Enter your choice (100 or 200) : ");
 
 		Scanner scanner = new Scanner(System.in);
 		int searchChoice = scanner.nextInt();
@@ -68,5 +77,22 @@ public class BookSearchView {
 			
 			System.out.println("Invalid search choice.");
 		}
+		checkForSearch();
 	}
+	
+	public void checkForSearch() {
+
+		System.out.println("\nDo you want to Continue to Search? \nType Yes/No");
+		Scanner scanner = new Scanner(System.in);
+		String choice = scanner.next();
+		if (choice.equalsIgnoreCase("yes")) {
+			bookSearchInit();
+		} else if (choice.equalsIgnoreCase("no")) {
+			return;
+		} else {
+			System.out.println("\nInvalid choice, \nPlease enter valid choice.\n");
+			checkForSearch();
+		}
+	}
+	
 }

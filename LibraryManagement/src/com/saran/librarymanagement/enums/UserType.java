@@ -4,8 +4,9 @@ public enum UserType {
 	
 	INVALID(0),
 	ADMIN(1),
-	USER(2);
-	
+	LIBRARY_ADMIN(2),
+	USER(3);
+		
 	int userType;
 	
 	private UserType(int i) {
@@ -15,4 +16,8 @@ public enum UserType {
 	public int getUserType() {
 		return userType;
 	}
+}
+
+enum UserErrorCode {
+	
 }

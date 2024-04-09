@@ -21,7 +21,7 @@ public class ManageBookView {
 		Scanner scanner = new Scanner(System.in);
 		manageBookModel.retriveBook();
 		
-		System.out.println("Manege Book Option");
+		System.out.println("\nManege Book Option");
 		System.out.println("------------------");
 		System.out.print("1 -> Add Book");
 		System.out.print("\n2 -> Edit Book");
@@ -67,6 +67,7 @@ public class ManageBookView {
 	public void init(boolean isFromNewBookAdd) {
 
 		System.out.print("\nEnter book details: ");
+		System.out.println("\n-----------------------");
 		Scanner scanner = new Scanner(System.in);
 		Book book = new Book();
 
@@ -80,7 +81,10 @@ public class ManageBookView {
 		book.setName(scanner.nextLine());
 		System.out.print("\nEnter book author:");
 		book.setAuthor(scanner.nextLine());
-//		if(isFromNewBookAdd)
+		System.out.print("\nEnter book Volume:");
+		book.setVolume(scanner.nextLine());
+		System.out.print("\nEnter book Publication:");
+		book.setPublication(scanner.nextLine());
 		manageBookModel.addNewBook(book, isFromNewBookAdd);
 		
 	}
@@ -93,8 +97,10 @@ public class ManageBookView {
 		System.out.printf("\n------- " + message + " -------\n", book.getName());
 	}
 
-	public void onBookExist(Book book) {
-		System.out.printf("\n------- Book  %s already exist -------\n", book.getName());
+	public void onBookExist(Book book, String message) {
+
+		String bookInfo = "( " +book.getName() +", "+book.getVolume() +" )";
+		System.out.printf("\n-------  "+ message +"  -------\n", bookInfo);
 	}
 
 	public void checkForAddNewBook() {
@@ -105,7 +111,8 @@ public class ManageBookView {
 		if (choice.equalsIgnoreCase("yes")) {
 			init(true);
 		} else if (choice.equalsIgnoreCase("no")) {
-			System.out.println("\n Thanks for adding books");
+			manageBookOption();
+//			System.out.println("\n Thanks for adding books");
 		} else {
 			System.out.println("\nInvalid choice, Please enter valid choice.\n");
 			checkForAddNewBook();
