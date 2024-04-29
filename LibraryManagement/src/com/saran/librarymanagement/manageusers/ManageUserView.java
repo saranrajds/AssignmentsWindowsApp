@@ -2,6 +2,8 @@ package com.saran.librarymanagement.manageusers;
 
 import java.util.List;
 import java.util.Scanner;
+
+import com.saran.librarymanagement.Repository.BorrowedBookByUser;
 import com.saran.librarymanagement.enums.SearchReportType;
 import com.saran.librarymanagement.enums.UserType;
 import com.saran.librarymanagement.login.LoginView;
@@ -86,14 +88,15 @@ public class ManageUserView {
 		System.out.println("------------------\n");
 		System.out.print("1 -> Add User");
 		System.out.print("\n2 -> Edit User");
-		System.out.print("\n3 -> Delete User");
+		
 
-//		if (manageUserModel.getUserType() != UserType.ADMIN.getUserType())
-			System.out.print("\n8 -> Back");
+		if (manageUserModel.getUserType() != UserType.ADMIN.getUserType())
+			System.out.print("\n3 -> Delete User");
 //		else {
 //			System.out.print("\n9 -> Exit");
 //		}
-
+		
+		System.out.print("\n8 -> Back");
 		System.out.print("\nEnter UR Choich : ");
 
 		String userChoich = scanner.next();
@@ -161,16 +164,16 @@ public class ManageUserView {
 //		}
 //	}
 
-	public void showBorrowedBooks(List<Book> books, String userEmailId) {
+	public void showBorrowedBooks(List<BorrowedBookByUser> books, String userEmailId) {
 		
 		System.out.println("\n----------------------------------------");
 		System.out.println("The "+ userEmailId +" User Borrowed Books");
 		System.out.println("\n-----------------------------------------");
-		System.out.println("Id \t Name \t\t Author");
+		System.out.println("Id \t Name \t\t Author \t\t Valumn \t\t UserName");
 		System.out.println("\n-----------------------------------------");
-		for(Book book: books) 
+		for(BorrowedBookByUser book: books) 
 		{
-			System.out.println(book.getId() +"\t"+ book.getName()+"\t\t"+ book.getAuthor());
+			System.out.println(book.getBookId() +"\t"+ book.getBookName()+"\t\t"+ book.getAuthorName()+"\t\t"+ book.getVolumn() +"\t\t"+ book.getUserName());
 		}
 		System.out.println("Submit all borrowed books before deleting...");
 		System.out.println("\n------------------------------------------\n");

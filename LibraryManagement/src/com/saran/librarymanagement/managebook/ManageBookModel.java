@@ -2,6 +2,8 @@ package com.saran.librarymanagement.managebook;
 
 import java.util.List;
 
+import com.saran.librarymanagement.common.CommonModel;
+import com.saran.librarymanagement.common.CommonView;
 import com.saran.librarymanagement.enums.BookStatus;
 import com.saran.librarymanagement.enums.ModuleType;
 import com.saran.librarymanagement.librarydatatabase.LibraryDatabase;
@@ -51,11 +53,11 @@ class ManageBookModel {
 		String userName = LibraryDatabase.getInstance().getUserByBookId(bookId);
 
 		if (bookStatus.getBookStatus() == BookStatus.NOT_AVAILABLE.getBookStatus()) {
-			manageBookView.aletMessage(userName + " Already Borrowe the book..");
+			manageBookView.aletMessage("This book is borrowed by "+userName);
 		} else if (bookStatus.getBookStatus() == BookStatus.NOT_FOUND.getBookStatus()) {
 			manageBookView.aletMessage(bookId + " Book Not Found..");
 		} else if (bookStatus.getBookStatus() == BookStatus.NOT_DELETED.getBookStatus()) {
-			manageBookView.aletMessage(bookId + " Something Wrong Please try again..");
+			manageBookView.aletMessage("Something Wrong Please try again..");
 		} else {
 			manageBookView.aletMessage(userName + " Book Removed Successfully..");
 		}
@@ -65,9 +67,6 @@ class ManageBookModel {
 
 	public void retriveBook() {
 
-		if (!LibraryDatabase.getInstance().isBookFileRetrived()) {
-			LibraryDatabase.getInstance().setBookFileRetrived(true);
-			LibraryDatabase.getInstance().retriveDataFromFile(ModuleType.BOOK.getModuleType());
-		}
+		new CommonView().retriveBook();
 	}
 }

@@ -3,6 +3,9 @@ package com.saran.librarymanagement.report;
 import java.util.List;
 import java.util.Scanner;
 
+import com.saran.librarymanagement.common.CommonView;
+import com.saran.librarymanagement.enums.BookStatus;
+import com.saran.librarymanagement.enums.UserBookStatus;
 import com.saran.librarymanagement.enums.UserType;
 import com.saran.librarymanagement.model.Book;
 import com.saran.librarymanagement.model.User;
@@ -18,10 +21,15 @@ public class ReportView {
 	public void reportInit() {
 		
 		Scanner scanner = new Scanner(System.in);
+		int userType = reportModel.getUserType();
 		
 		System.out.println("\n------------Reports----------");		
 		System.out.println("1 -> Get Books List");
-		System.out.println("2 -> Get Users List");
+		
+		if(userType != UserType.USER.getUserType())
+			System.out.println("2 -> Get Users List");
+		
+		System.out.println("3 -> View Borrowed Book");
 		System.out.println("9 -> Back");
 		System.out.print("\nEnter Your Choice : ");
 		String choice = scanner.next();
@@ -31,12 +39,19 @@ public class ReportView {
 			getBooksList();
 			reportInit();
 			break;
-		case "2":
-			getUserList();
+		case "3":
+//			getBooksList();
+			new CommonView().showBorrowBookList();
 			reportInit();
 			break;
 		case "9":
 			return;
+		case "2":
+			if(userType != UserType.USER.getUserType()) {
+				getUserList();
+				reportInit();
+				break;
+			}
 		default:
 			System.out.println("Enter correct choice...");
 			reportInit();
@@ -60,10 +75,11 @@ public class ReportView {
 	public void showBooksList(List<Book> books) {
 
 		System.out.println("\n------------------- Books ----------------------\n");
-		System.out.println("Id \tName \t\tBook Author \tBook Status  \tCreated Date ");
+		System.out.println("Id \tName \tBook Author \tVolumn \tBook Status  \tCreated Date ");
 		System.out.println("-----------------------------------------------------");
 		for(Book book: books) {
-			System.out.println(book.getId() +"\t"+ book.getName() +"\t"+ book.getAuthor() +"\t"+ book.getAvailability()+"\t"+book.getModifyDate());
+			String bookStatus = book.getAvailability() == BookStatus.AVAILABLE.getBookStatus() ? "AVAILABLE" : "NOT_AVAILABLE";			
+			System.out.println(book.getId() +"\t"+ book.getName() +"\t"+ book.getAuthor() +"\t"+ book.getVolume() +"\t"+ bookStatus +"\t"+book.getModifyDate());
 		}
 		System.out.println("-----------------------------------------------------");
 	}

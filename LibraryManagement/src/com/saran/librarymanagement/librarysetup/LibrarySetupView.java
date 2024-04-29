@@ -73,7 +73,7 @@ public class LibrarySetupView {
 		System.out.println("3. Search Book");
 		if (userType == UserType.USER.getUserType()) {
 			
-			System.out.println("4. Borrow Or Returning");
+			System.out.println("4. Borrow / Returning");
 		}
 		
 		System.out.println("5. Report");

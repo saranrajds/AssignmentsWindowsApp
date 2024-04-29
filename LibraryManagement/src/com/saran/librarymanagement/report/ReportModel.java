@@ -47,4 +47,8 @@ public class ReportModel {
 			reportView.showAlert("No Data Found");
 		}
 	}
+	
+	public int getUserType() {
+		return LibraryDatabase.getInstance().getCurrentUserType();
+	}
 }

@@ -2,6 +2,7 @@ package com.saran.librarymanagement.borroworreturing;
 
 import java.util.List;
 
+import com.saran.librarymanagement.common.CommonView;
 import com.saran.librarymanagement.enums.BookStatus;
 import com.saran.librarymanagement.enums.ErrorCode;
 import com.saran.librarymanagement.librarydatatabase.LibraryDatabase;
@@ -24,7 +25,7 @@ public class BorrowOrReturingModel {
 		int errorCode = LibraryDatabase.getInstance().returningBook(bookId);
 		
 		if(errorCode == BookStatus.AVAILABLE.getBookStatus()) {
-			borrowOrReturingView.showAlert("No One is borrow the Book..");
+			borrowOrReturingView.showAlert("No Books is borrowed..");
 		}
 		else
 			showErrorCode(errorCode, bookId, "Return");
@@ -53,9 +54,21 @@ public class BorrowOrReturingModel {
 		else if(errorCode == BookStatus.DIMAGED.getBookStatus()) {
 			borrowOrReturingView.showAlert("Book ("+ bookName +") DIMAGED...");
 		} 
+		else if(errorCode == ErrorCode.NOT_YOUR.getErrorCode()) {
+			borrowOrReturingView.showAlert("The Enter book is not Your Borrowed Book..");
+		} 
 		else {
 			borrowOrReturingView.showAlert("Book is already Borrowed...");
 		}
 		System.out.println("---------------------------------\n");
+	}
+
+	public void retriveBook() {
+
+		new CommonView().retriveBook();
+	}
+
+	public void borrowBookList() {
+		new CommonView().showBorrowBookList();
 	}
 }

@@ -1,10 +1,12 @@
 package com.saran.librarymanagement.model;
 
+import com.saran.librarymanagement.enums.UserBookStatus;
+
 public class UserBorrowedBooks {
 
 	private int bookId;
 	private int userId;
-	private int bookStatus;
+	private UserBookStatus bookStatus; 
 	
 	public int getBookId() {
 		return bookId;
@@ -18,10 +20,10 @@ public class UserBorrowedBooks {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-	public int getBookStatus() {
+	public UserBookStatus getBookStatus() {
 		return bookStatus;
 	}
-	public void setBookStatus(int bookStatus) {
+	public void setBookStatus(UserBookStatus bookStatus) {
 		this.bookStatus = bookStatus;
 	}
 }

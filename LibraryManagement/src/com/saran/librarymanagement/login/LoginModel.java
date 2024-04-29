@@ -37,6 +37,7 @@ class LoginModel {
 
 	public void retriveBooks() {
 		LibraryDatabase.getInstance().retriveDataFromFile(ModuleType.BOOK.getModuleType());
+		ritriveBorrowedBook();
 	}
 	
 	public void ritriveUsers() {
@@ -45,7 +46,11 @@ class LoginModel {
 	
 	public void ritriveLibraryInfo() {
 		LibraryDatabase.getInstance().retriveDataFromFile(ModuleType.LIBRARIY.getModuleType());	
-	} 
+	}
+	
+	public void ritriveBorrowedBook() {
+		LibraryDatabase.getInstance().retriveDataFromFile(ModuleType.BORROWEDBOOK.getModuleType());	
+	}
 //	private boolean isValidUserName(String userName) {
 //		return userName.equals("123");
 //	}

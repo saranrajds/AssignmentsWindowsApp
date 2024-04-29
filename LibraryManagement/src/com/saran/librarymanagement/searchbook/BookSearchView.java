@@ -32,7 +32,7 @@ public class BookSearchView {
 	public void showSearchBooks(List<Book> bookList) {
 
 		System.out.println("\n--------------Books-------------------");
-		System.out.printf("Id \tName \t\tBook Author \tVolume");				
+		System.out.printf("Id \tName \t\tBook Author \tVolume\n");				
 				
 		for (Book book : bookList) {
 			System.out.println(book.getId()+"\t"+ book.getName() +"\t\t"+ book.getAuthor()+"\t"+book.getVolume());
@@ -43,8 +43,8 @@ public class BookSearchView {
 	public void showSearchUser(List<User> userList) {
 
 		System.out.println("\n--------------Users-------------------");			
-		System.out.printf("Id \tName \t\tEmail \tCreated Date ");		
-		
+		System.out.printf("Id \tName \t\tEmail \tCreated Date \n");		
+
 		for (User user : userList) {
 			System.out.println(user.getId() +"\t"+ user.getName() +"\t"+ user.getEmailId() +"\t"+user.getCreatedDate());
 		}
@@ -57,7 +57,7 @@ public class BookSearchView {
 						"-------Search Book Using------- "
 						+ "\n1 -> Book Name "
 						+ "\n2 -> Book Author ");
-		System.out.print("\n Enter your choice (100 or 200) : ");
+//		System.out.print("\n Enter your choice (100 or 200) : ");
 
 		Scanner scanner = new Scanner(System.in);
 		int searchChoice = scanner.nextInt();

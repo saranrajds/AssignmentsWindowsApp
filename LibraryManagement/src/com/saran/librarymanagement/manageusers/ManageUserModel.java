@@ -1,6 +1,8 @@
 package com.saran.librarymanagement.manageusers;
 
 import java.util.List;
+
+import com.saran.librarymanagement.Repository.BorrowedBookByUser;
 import com.saran.librarymanagement.commonvalidation.CommonValidations;
 import com.saran.librarymanagement.enums.ModuleType;
 import com.saran.librarymanagement.enums.UserOperationCode;
@@ -64,8 +66,7 @@ public class ManageUserModel {
 			manageUserView.aletMessage(userEmailId + " User Removed Successfully..");
 		} 
 		else if(hasUser == UserOperationCode.USER_BORROED_BOOK.getUserOperationCode()) {	
-			List<User> user = LibraryDatabase.getInstance().getNeedDeletedUserId(userEmailId);
-			List<Book> books = LibraryDatabase.getInstance().getUserBorrowedBook(user.get(0).getId());
+			List<BorrowedBookByUser> books = LibraryDatabase.getInstance().getUserBorrowedBook();
 			manageUserView.showBorrowedBooks(books, userEmailId);
 		}
 		else {

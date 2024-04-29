@@ -7,7 +7,7 @@ public enum ModuleType {
 	BOOK(3),
 	CREDENTIALS(4),
 	LIBRARIY(5),
-	BORROWEDBOOK(5);
+	BORROWEDBOOK(6);
 	
 	int moduleType;
 	

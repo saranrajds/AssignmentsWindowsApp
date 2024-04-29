@@ -2,6 +2,9 @@ package com.saran.librarymanagement.common;
 
 import java.util.List;
 
+import com.saran.librarymanagement.Repository.BorrowedBookByUser;
+import com.saran.librarymanagement.enums.ModuleType;
+import com.saran.librarymanagement.librarydatatabase.LibraryDatabase;
 import com.saran.librarymanagement.model.Book;
 import com.saran.librarymanagement.model.User;
 
@@ -33,5 +36,28 @@ public class CommonView {
 	public void showAlert(String message) {
 		System.out.println("\n-----------------------");
 		System.out.println(message);
+	}
+	
+	public void retriveBook() {
+
+		commonModel.retriveBook();
+	}
+
+	public void showBorrowBookList() {
+		commonModel.showBorrowBookList();
+	}
+
+	public void showBorrowBook(List<BorrowedBookByUser> borrowedBooks) {		
+		
+		System.out.println("\n----------------------------------------");
+		System.out.println(" User Borrowed Books");
+		System.out.println("\n-----------------------------------------");
+		System.out.println("Id \t Name \t\t Author \t\t Valumn \t UserName");
+		System.out.println("\n-----------------------------------------");
+		for(BorrowedBookByUser book: borrowedBooks) 
+		{
+			System.out.println(book.getBookId() +"\t"+ book.getBookName()+"\t\t"+ book.getAuthorName()+"\t\t"+ book.getVolumn() +"\t\t"+ book.getUserName());
+		}
+		System.out.println("\n------------------------------------------\n");
 	}
 }

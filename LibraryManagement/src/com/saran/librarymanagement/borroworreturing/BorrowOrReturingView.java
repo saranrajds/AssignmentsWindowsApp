@@ -14,17 +14,18 @@ public class BorrowOrReturingView {
 	public BorrowOrReturingView() {
 
 		this.borrowOrReturingModel = new BorrowOrReturingModel(this);
+		borrowOrReturingModel.retriveBook();
 	}
 
 	public void init() {
 
 		Scanner scanner = new Scanner(System.in);
 
-		System.out.println("Borrow / Returing Management");
+		System.out.println("\nBorrow / Returing Management");
 		System.out.println("-----------------------------");
 		System.out.println("1 -> Borrow Book");
 		System.out.println("2 -> Retuning Book");
-		System.out.println("3 -> View Borrowed Book");
+//		System.out.println("3 -> View Borrowed Book");
 		System.out.println("9 -> Back");
 
 		System.out.print("Enter choice : ");
@@ -32,20 +33,26 @@ public class BorrowOrReturingView {
 
 		if (choice.equals("1")) {
 			borrowBook();
+//			init();
 		} else if (choice.equals("2")) {
 			returningBook();
-		} else if (choice.equals("3")) {
-			viewBorrowBooks();
-		} else if (choice.equals("9")) {
-
+//			init();
+		} 
+//		else if (choice.equals("3")) {
+//			viewBorrowBooks();
+//			init();
+//		} 
+		else if (choice.equals("9")) {
+			return;
 		} else {
 			System.out.println("Enter Correct Option...");
 			init();
 		}
+		
 	}
 
-	private void viewBorrowBooks() {
-
+	void viewBorrowBooks() {
+		borrowOrReturingModel.borrowBookList();
 	}
 
 	private void returningBook() {
@@ -66,16 +73,14 @@ public class BorrowOrReturingView {
 		int bookLen = new CommonView().getAvailableBooks();
 
 		try {
-			if (bookLen <= 0) {
-				System.out.println("\n------------Info-----------");
-				System.out.println("No Books are Avaibels...");
-				System.out.println("-----------------------------\n");
-				init();
-			} else {
+			if (bookLen > 0) {
 				Scanner scanner = new Scanner(System.in);
 				System.out.print("Enter Book ID : ");
 				int bookId = scanner.nextInt();
 				borrowOrReturingModel.onAssignBook(bookId);
+			}
+			else {
+				init();
 			}
 
 		} catch (Exception e) {

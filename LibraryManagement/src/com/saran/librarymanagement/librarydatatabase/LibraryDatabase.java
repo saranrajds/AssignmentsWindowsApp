@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.saran.librarymanagement.Repository.BorrowedBookByUser;
 import com.saran.librarymanagement.enums.BookStatus;
 import com.saran.librarymanagement.enums.ErrorCode;
 import com.saran.librarymanagement.enums.ModuleType;
@@ -30,7 +31,7 @@ public class LibraryDatabase {
 
 	private final String FILE_PATH = "src/com/saran/librarymanagement/librarydatatabase/LibraryDatabaseFiles/";
 	private final String BOOK_FILE_NAME = "book", CREDENTIAL_FILE_NAME = "credential", USER_FILE_NAME = "user",
-			LIBRARY_FILE_NAME = "library";
+			LIBRARY_FILE_NAME = "library", BORROWED_BOOKS = "borrowedBooks";
 
 	private static boolean isUserFileRetrived = false, isBookFileRetrived = false;
 	private static LibraryDatabase libtatyDatabase;
@@ -151,19 +152,22 @@ public class LibraryDatabase {
 
 	public boolean insertBook(Book pBook) {
 
-		boolean hasBook = bookList.stream().anyMatch(book -> book.getVolume().equals(pBook.getVolume())
-				&& book.getPublication().equals(pBook.getPublication()));
+//		boolean hasBook = bookList.stream()
+//				.anyMatch(book -> book.getName().equals(pBook.getName())
+//						&& book.getVolume().equals(pBook.getVolume())
+//						&& book.getPublication().equals(pBook.getPublication())
+//						&& book.getAuthor().equals(pBook.getAuthor()));
 
-		if (!hasBook) {
-			pBook.setId(bookId++);
-			pBook.setAvailability(BookStatus.AVAILABLE.getBookStatus());
-			pBook.setCreatedDate(currentDateTime.format(formatter));
-			pBook.setModifyDate(currentDateTime.format(formatter));
-			bookList.add(pBook);
-			uploadData(BOOK_FILE_NAME, bookList);
-			return true;
-		}
-		return false;
+//		if (true) {
+		pBook.setId(bookId++);
+		pBook.setAvailability(BookStatus.AVAILABLE.getBookStatus());
+		pBook.setCreatedDate(currentDateTime.format(formatter));
+		pBook.setModifyDate(currentDateTime.format(formatter));
+		bookList.add(pBook);
+		uploadData(BOOK_FILE_NAME, bookList);
+		return true;
+//		}
+//		return false;
 	}
 
 	public boolean updateBook(Book pBook) {
@@ -188,40 +192,45 @@ public class LibraryDatabase {
 
 	public BookStatus onDeleteBook(int bookId2) {
 
-		boolean[] isRemoved = { false };
-
 		boolean hasBook = bookList.stream().anyMatch(book -> book.getId() == bookId2);
 
 		if (!hasBook) {
 			return BookStatus.NOT_FOUND;
 		}
 
-		hasBook = bookList.stream().anyMatch(book -> book.getId() == bookId2
-				&& book.getAvailability() == BookStatus.NOT_AVAILABLE.getBookStatus());
+		hasBook = bookList.stream().anyMatch(
+				book -> book.getId() == bookId2 && book.getAvailability() == BookStatus.NOT_AVAILABLE.getBookStatus());
 
 		if (hasBook) {
 			return BookStatus.NOT_AVAILABLE;
 		}
 
-		List<Book> _book = bookList.stream().filter(book -> book.getId() == bookId2).map(book -> {
-			book.setDeleted(true);
-			isRemoved[0] = true;
-			return book;
-		}).toList();
+		for (Book book : bookList) {
 
-		if (!isRemoved[0]) {
-			return BookStatus.NOT_DELETED;
-		} else {
-			return BookStatus.DELETED;
+			if (book.getId() == bookId2) {
+				book.setAvailability(BookStatus.DELETED.getBookStatus());
+				book.setDeleted(true);
+				uploadData(BOOK_FILE_NAME, bookList);
+				return BookStatus.DELETED;
+			}
 		}
+
+		return BookStatus.NOT_DELETED;
 	}
 
 	public List<Book> getBooks() {
-		return bookList;
+		return bookList.stream().filter(book -> book.getAvailability() == BookStatus.AVAILABLE.getBookStatus()
+				|| book.getAvailability() == BookStatus.NOT_AVAILABLE.getBookStatus()).toList();
 	}
 
 	public List<User> getUsers() {
-		return userList;
+
+		if (getCurrentUserType() == UserType.ADMIN.getUserType())
+			return userList.stream().filter(
+					user -> user.getUserType() == UserType.LIBRARY_ADMIN.getUserType() && user.isActive() == true)
+					.toList();
+		else
+			return userList.stream().filter(user -> user.isActive() == true).toList();
 	}
 
 	public List<Book> getBook(String bookSearchValue, int seachType) {
@@ -243,16 +252,15 @@ public class LibraryDatabase {
 
 		if (hasUser) {
 
-			List<User> user = userList.stream().filter(tempUser -> tempUser.getEmailId().equals(userEmailId)).toList();
-			List<Book> _brdBooks = getUserBorrowedBook(user.get(0).getId());
+			List<BorrowedBookByUser> _brdBooks = getUserBorrowedBook();
 
 			if (_brdBooks.size() > 0) {
 				return UserOperationCode.USER_BORROED_BOOK.getUserOperationCode();
 			} else {
 
-				userList.stream().filter(tempUser -> tempUser.getEmailId().equals(userEmailId)).map(tempUser -> {
-					tempUser.setActive(false);
-					return tempUser;
+				userList.stream().forEach(tempUser -> {
+					if (tempUser.getEmailId().equals(userEmailId))
+						tempUser.setActive(false);
 				});
 
 				uploadData(USER_FILE_NAME, userList);
@@ -260,25 +268,48 @@ public class LibraryDatabase {
 			}
 
 		}
-	
+
 		return UserOperationCode.USER_NOT_FOUND.getUserOperationCode();
-		
 	}
 
-	public List<Book> getUserBorrowedBook(int userId) {
+	public List<BorrowedBookByUser> getUserBorrowedBook() {
 
-		List<Book> _brdBooks = borrowedBooks.stream()
-				.flatMap(brdBooks -> bookList.stream().filter(
-						tempBooks -> brdBooks.getUserId() == userId && brdBooks.getBookId() == tempBooks.getId())
-						.map(result -> {
-							return result;
-						}))
-				.toList();
-		return _brdBooks;
+		List<BorrowedBookByUser> bBBUser = new ArrayList<BorrowedBookByUser>();
+		boolean isLibraryAdmin = currentUserType == UserType.LIBRARY_ADMIN.getUserType();
+
+		borrowedBooks.forEach(bBook -> {
+			BorrowedBookByUser tempBBBUser = new BorrowedBookByUser();
+
+			if ((isLibraryAdmin || bBook.getUserId() == currentUserId)
+					&& bBook.getBookStatus() == UserBookStatus.BORROW) {
+				Optional<Book> book_ = bookList.stream().filter(book -> book.getId() == bBook.getBookId()
+						&& book.getAvailability() == BookStatus.NOT_AVAILABLE.getBookStatus()).findFirst();
+
+				if (book_.isPresent()) {
+					Book tempBook = book_.get();
+					tempBBBUser.setAuthorName(tempBook.getAuthor());
+					tempBBBUser.setBookId(tempBook.getId());
+					tempBBBUser.setBookName(tempBook.getName());
+					tempBBBUser.setUserId(currentUserId);
+					tempBBBUser.setUserName(getCurUserName(bBook.getUserId()));
+					tempBBBUser.setVolumn(tempBook.getVolume());
+					bBBUser.add(tempBBBUser);
+				}
+			}
+		});
+
+		return bBBUser;
 	}
-	
+
+	public String getCurUserName(int userId) {
+
+		Optional<User> curUser = userList.stream().filter(user -> user.getId() == userId).findFirst();
+
+		return curUser.map(User::getName).orElse("");
+	}
+
 	public List<User> getNeedDeletedUserId(String userEmailId) {
-		
+
 		List<User> user = userList.stream().filter(tempUser -> tempUser.getEmailId().equals(userEmailId)).toList();
 		return user;
 	}
@@ -288,7 +319,7 @@ public class LibraryDatabase {
 		if (credential.getEmailId().equals("123") && credential.getPassword().equals("123")) {
 			currentUserType = UserType.ADMIN.getUserType();
 			currentUserId = 1;
-			System.out.println("userCount "+userId);
+			System.out.println("userCount " + userId);
 			return currentUserType;
 		}
 
@@ -307,16 +338,13 @@ public class LibraryDatabase {
 	}
 
 	public String getUserByBookId(int bookId) {
-		String userName;
 
-		List<User> user = borrowedBooks.stream()
-				.flatMap(books -> userList.stream().filter(users -> books.getUserId() == users.getId()).map(users -> {
-					return users;
-				})).collect(Collectors.toList());
+		String userName = borrowedBooks.stream().flatMap(books -> userList.stream()
+				.filter(users -> books.getUserId() == users.getId()).map(users -> users.getName()))
+				.collect(Collectors.joining(" "));
 
-		userName = user.size() > 0 ? user.get(0).getName() : "";
-		System.out.println("userName" + userName);
-		return userName;
+		System.out.println("userName" + userName.toString());
+		return userName.toString();
 	}
 
 	public int onAssignBook(int bookId) {
@@ -328,9 +356,10 @@ public class LibraryDatabase {
 			UserBorrowedBooks borrowedBook = new UserBorrowedBooks();
 			borrowedBook.setBookId(bookId);
 			borrowedBook.setUserId(currentUserId);
-			borrowedBook.setBookStatus(UserBookStatus.BORROW.getUserBookStatus());
+			borrowedBook.setBookStatus(UserBookStatus.BORROW);
 			borrowedBooks.add(borrowedBook);
 			changeBookStatus(bookId);
+			uploadData(BORROWED_BOOKS, borrowedBooks);
 			return ErrorCode.UPDATED.getErrorCode();
 		}
 		return bookStatus;
@@ -339,20 +368,37 @@ public class LibraryDatabase {
 	public int returningBook(int bookId2) {
 
 		for (Book book : bookList) {
-			
-			if (book.getId() == bookId2
-					&& book.getAvailability() == BookStatus.AVAILABLE.getBookStatus())
+
+			if (book.getId() == bookId2 && book.getAvailability() == BookStatus.AVAILABLE.getBookStatus())
 				return BookStatus.AVAILABLE.getBookStatus();
 
-			if (book.getId() == bookId2
-					&& book.getAvailability() == BookStatus.NOT_AVAILABLE.getBookStatus()) {
+			if (book.getId() == bookId2 && book.getAvailability() == BookStatus.NOT_AVAILABLE.getBookStatus()) {
+
+				if (!updateReturnBookStatusInBorrowedBook(bookId2)) {
+					return ErrorCode.NOT_YOUR.getErrorCode();
+				}
 				book.setAvailability(BookStatus.AVAILABLE.getBookStatus());
 				uploadData(BOOK_FILE_NAME, bookList);
+
 				return ErrorCode.UPDATED.getErrorCode();
 			}
 		}
 
 		return ErrorCode.NOTFOUNT.getErrorCode();
+	}
+
+	private boolean updateReturnBookStatusInBorrowedBook(int bookId2) {
+
+		for (UserBorrowedBooks borrowedBook : borrowedBooks) {
+
+			if (borrowedBook.getBookId() == bookId2 && borrowedBook.getBookStatus() == UserBookStatus.BORROW
+					&& borrowedBook.getUserId() == currentUserId) {
+				borrowedBook.setBookStatus(UserBookStatus.RETURN);
+				uploadData(BORROWED_BOOKS, borrowedBooks);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void changeBookStatus(int bookId) {
@@ -372,11 +418,11 @@ public class LibraryDatabase {
 		if (bookList.stream().anyMatch(book -> book.getId() == bookId2
 				&& book.getAvailability() == BookStatus.NOT_AVAILABLE.getBookStatus())) {
 			return BookStatus.NOT_AVAILABLE.getBookStatus();
-		} else if (bookList.stream().anyMatch(book -> book.getId() == bookId2
-				&& book.getAvailability() == BookStatus.DIMAGED.getBookStatus())) {
+		} else if (bookList.stream().anyMatch(
+				book -> book.getId() == bookId2 && book.getAvailability() == BookStatus.DIMAGED.getBookStatus())) {
 			return BookStatus.DIMAGED.getBookStatus();
-		} else if (bookList.stream().anyMatch(book -> book.getId() == bookId2
-				&& book.getAvailability() == BookStatus.AVAILABLE.getBookStatus())) {
+		} else if (bookList.stream().anyMatch(
+				book -> book.getId() == bookId2 && book.getAvailability() == BookStatus.AVAILABLE.getBookStatus())) {
 			return BookStatus.AVAILABLE.getBookStatus();
 
 		}
@@ -388,14 +434,14 @@ public class LibraryDatabase {
 
 		String filename = FILE_PATH + pFilename + ".json";
 		ObjectMapper objectMapper = new ObjectMapper();
-		boolean fileValid = createFile(pFilename);
+//		boolean fileValid = createFile(pFilename);
 
 		try {
-			if (fileValid) {
+//			if (fileValid) {
 
 //				String jsonData = objectMapper.writeValueAsString(arrayList);
-				objectMapper.writeValue(new File(filename), arrayList);
-			}
+			objectMapper.writeValue(new File(filename), arrayList);
+//			}
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -427,12 +473,14 @@ public class LibraryDatabase {
 		String filenameForCrediantial = FILE_PATH;
 
 		if (moduleType == ModuleType.USER.getModuleType()) {
-			filename += "user.json";
-			filenameForCrediantial += "credential.json";
+			filename += USER_FILE_NAME + ".json";
+			filenameForCrediantial += CREDENTIAL_FILE_NAME + ".json";
 		} else if (moduleType == ModuleType.LIBRARIY.getModuleType()) {
-			filename += "library.json";
+			filename += LIBRARY_FILE_NAME + ".json";
+		} else if (moduleType == ModuleType.BORROWEDBOOK.getModuleType()) {
+			filename += BORROWED_BOOKS + ".json";
 		} else {
-			filename += "book.json";
+			filename += BOOK_FILE_NAME + ".json";
 		}
 
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -462,6 +510,13 @@ public class LibraryDatabase {
 							});
 
 					library = libraries;
+				} else if (moduleType == ModuleType.BORROWEDBOOK.getModuleType()) {
+
+					ArrayList<UserBorrowedBooks> borrowedBooks_ = objectMapper.readValue(new File(filename),
+							new TypeReference<ArrayList<UserBorrowedBooks>>() {
+							});
+
+					this.borrowedBooks = borrowedBooks_;
 				} else {
 					ArrayList<Book> hrsTemp = objectMapper.readValue(new File(filename),
 							new TypeReference<ArrayList<Book>>() {
@@ -495,15 +550,13 @@ public class LibraryDatabase {
 	}
 
 	public List<Book> getAvailableBooks() {
-		return bookList
-				.stream()
-				.filter(book -> book.getAvailability() == BookStatus.AVAILABLE.getBookStatus()
-						&& !book.isDeleted())
+		return bookList.stream()
+				.filter(book -> book.getAvailability() == BookStatus.AVAILABLE.getBookStatus() && !book.isDeleted())
 				.toList();
 	}
 
 	public List<User> getCurrentUser() {
-		
+
 		return userList.stream().filter(user -> user.getId() == currentUserId).toList();
 	}
 
@@ -511,7 +564,4 @@ public class LibraryDatabase {
 		return bookList.stream().filter(book -> book.getId() == bookId).toList();
 	}
 
-	public void retriveBooks() {
-		
-	}
 }

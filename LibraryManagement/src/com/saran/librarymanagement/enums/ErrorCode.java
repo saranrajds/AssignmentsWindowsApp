@@ -4,7 +4,8 @@ public enum ErrorCode {
 	
 	INSERTED(11),
 	UPDATED(12),
-	NOTFOUNT(15);
+	NOTFOUNT(15),
+	NOT_YOUR(16);
 	
 	private int errorCode;
 	
