@@ -57,7 +57,7 @@ public class BookSearchView {
 						"-------Search Book Using------- "
 						+ "\n1 -> Book Name "
 						+ "\n2 -> Book Author ");
-//		System.out.print("\n Enter your choice (100 or 200) : ");
+		System.out.print("\n Enter your choice ");
 
 		Scanner scanner = new Scanner(System.in);
 		int searchChoice = scanner.nextInt();

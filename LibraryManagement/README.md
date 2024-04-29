@@ -1,35 +1,39 @@
-Manage Book
------------
-	-> Add Book
-	-> Update Book
-	-> Remove Book
+Library Management
+------------------
 
-Manage User
------------
-	-> Add User
-	-> Update User
-	-> Remove User
-	
-Search
-------
-	-> Search Book
+-> Admin
+--------
+	-> Create Account for Librarient
+
+-> Librarient
+-------------
+	-> Create Account for Users (M)
+		-> Manage Users Acounts
+	-> Manage Book (M)
+	-> Search Book (M)
 		-> Book Name
 		-> Book Author
-	
-Borrow / Returing
------------------
-	-> Borrow Book
-	-> Retuning Book
-	-> View Borrowed Book (b3)
+	-> Report (M)
+		-> Get Books List
+		-> Get Users List
+		-> View Borrowed Book
 
-Report
-------
-	-> Get Books List
-	-> Get Users List
+-> Users
+--------
+	-> Search Book (M)
+		-> Book Name
+		-> Book Author
+	-> Borrow / Return Book
+		-> Borrow Book
+		-> Return Boook
+	-> Report (M)
+		-> Get Books List
+		-> View Borrowed Book
+	
 
 Json to text file and Json from text Implimention
 -------------------------------------------------
     -> Completed
     
-Authorization Setting (b3)
+Authorization Setting (Done)
 ---------------------
