@@ -1,0 +1,44 @@
+[
+    {
+        "name": "Nellai",
+        "number": "123",
+        "toStatison": "Chennai",
+        "fromStation": "Tirunelveli",
+        "departureTime": "7",
+        "routes": [
+            "Madurai",
+            "Tiruche",
+            "MelMaruvathure"
+        ],
+        "arrivalTime": "6",
+        "fare": 300
+    },
+    {
+        "name": "Kaniyakumari",
+        "number": "234",
+        "toStatison": "Chennai",
+        "fromStation": "Kaniyakumari",
+        "departureTime": "4",
+        "routes": [
+            "Tirunelveli",
+            "Madurai",
+            "Tiruche"
+        ],
+        "arrivalTime": "5",
+        "fare": 350
+    },
+    {
+        "name": "MuthuNagar",
+        "number": "345",
+        "toStatison": "Chennai",
+        "fromStation": "KovilPatti",
+        "departureTime": "9",
+        "routes": [
+            "Madurai",
+            "Tiruche",
+            "MalMaruvathure"
+        ],
+        "arrivalTime": "7",
+        "fare": 250
+    }
+]

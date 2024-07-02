@@ -1,0 +1,32 @@
+[
+    {
+        "passengerId": 1,
+        "ticketStatus": "CONFIRM",
+        "ticketId": 4866,
+        "pnr": 395741
+    },
+    {
+        "passengerId": 1,
+        "ticketStatus": "CONFIRM",
+        "ticketId": 3768,
+        "pnr": 395741
+    },
+    {
+        "passengerId": 1,
+        "ticketStatus": "CONFIRM",
+        "ticketId": 8740,
+        "pnr": 395741
+    },
+    {
+        "passengerId": 1,
+        "ticketStatus": "WAITING",
+        "ticketId": 8518,
+        "pnr": 395741
+    },
+    {
+        "passengerId": 1,
+        "ticketStatus": "RAC",
+        "ticketId": 1494,
+        "pnr": 395741
+    }
+]
